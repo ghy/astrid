@@ -149,13 +149,25 @@
           </not>
         </condition>
       </fail>
-      <copy file="AndroidManifest.xml" tofile="AndroidManifest_old.xml" />
+      <if>
+        <equals arg1="${custom.market.disabled}" arg2="true" />
+        <then>
+          <replace token="market://" value="disabled://" 
+                   dir="${source.dir}" />
+          <replaceregexp file="${source.dir}/com/todoroo/astrid/utility/Constants.java"
+                         match="(MARKET_DISABLED.*=)"
+                         replace="\1 true;" />
+          <replaceregexp token="market://" value="disabled://" 
+                         dir="${source.dir}" />
+        </then>
+      </if>
+      <!--copy file="AndroidManifest.xml" tofile="AndroidManifest_old.xml" />
       <replaceregexp file="AndroidManifest.xml"
                      match="(android:versionName=&quot;[^&quot; ]*)[^&quot;]*"
                      replace="\1${custom.version.name}" />
       <antcall target="release" />
 
-      <move file="AndroidManifest_old.xml" tofile="AndroidManifest.xml" />
+      <move file="AndroidManifest_old.xml" tofile="AndroidManifest.xml" /-->
     </target>
 
 </project>
